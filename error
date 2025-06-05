@@ -1,0 +1,510 @@
+================================================================================= test session starts ==================================================================================
+platform linux -- Python 3.12.3, pytest-8.4.0, pluggy-1.6.0 -- /home/adarsh/profileService/venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/adarsh/profileService
+plugins: asyncio-1.0.0, anyio-4.9.0, mock-3.14.1
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 7 items                                                                                                                                                                      
+
+tests/test_router_cafsubmit.py::test_profile_status_check_success PASSED                                                                                                         [ 14%]
+tests/test_router_cafsubmit.py::test_invalid_eapplicant_id PASSED                                                                                                                [ 28%]
+tests/test_router_cafsubmit.py::test_user_not_found PASSED                                                                                                                       [ 42%]
+tests/test_router_cafsubmit.py::test_duplicate_key_error FAILED                                                                                                                  [ 57%]
+tests/test_router_cafsubmit.py::test_general_exception_handling PASSED                                                                                                           [ 71%]
+tests/test_router_cafsubmit.py::test_missing_required_fields FAILED                                                                                                              [ 85%]
+tests/test_router_cafsubmit.py::test_model_validation FAILED                                                                                                                     [100%]
+
+======================================================================================= FAILURES =======================================================================================
+_______________________________________________________________________________ test_duplicate_key_error _______________________________________________________________________________
+
+self = <MagicMock name='logger.__getitem__().info' id='137045217322784'>
+
+    def assert_called_once(self):
+        """assert that the mock was called only once.
+        """
+        if not self.call_count == 1:
+            msg = ("Expected '%s' to have been called once. Called %s times.%s"
+                   % (self._mock_name or 'mock',
+                      self.call_count,
+                      self._calls_repr()))
+>           raise AssertionError(msg)
+E           AssertionError: Expected 'info' to have been called once. Called 3 times.
+E           Calls: [call(event='Request Started(Register Achievements)', EApplicantId='encrypted123', payload=isprofileComplete(IsProfileComplete=True), ip_address=None, os=None, timestamp_utc='2025-06-05 17:11:15', timestamp_ist='2025-06-05 22:41:15'),
+E            call(event='Profile details Found', EApplicantId=12345, timestamp_utc='2025-06-05 17:11:15', timestamp_ist='2025-06-05 22:41:15'),
+E            call(event='Profile details Already Exists', EApplicantId='12345', timestamp_utc='2025-06-05 17:11:15', timestamp_ist='2025-06-05 22:41:15')].
+
+/usr/lib/python3.12/unittest/mock.py:923: AssertionError
+
+During handling of the above exception, another exception occurred:
+
+mock_dependencies = (<AsyncMock name='get_collection' id='137045217055264'>, <MagicMock name='decrypt_eapplicant_id' id='137045216543472'>...d='137045217283296'>, <AsyncMock name='send_sms' id='137045217287232'>, <MagicMock name='logger' id='137045217291168'>)
+
+    @pytest.mark.asyncio
+    async def test_duplicate_key_error(mock_dependencies):
+        mock_get_collection, mock_decrypt, _, _, mock_logger = mock_dependencies
+    
+        mock_decrypt.return_value = "12345"
+        mock_collection = AsyncMock()
+        mock_get_collection.return_value = mock_collection
+        mock_collection.find_one.return_value = {"_id": 12345}
+        mock_collection.find_one_and_update.side_effect = DuplicateKeyError("Duplicate key")
+    
+        test_data = {
+            "profileStatus": True,
+            "IsProfileComplete": True
+        }
+        response = client.post(
+            "/ProfileStatusCheck/encrypted123",
+            json=test_data
+        )
+    
+        assert response.status_code == 409
+        assert response.json()["status"] is True
+>       mock_logger["audit"].info.assert_called_once()
+E       AssertionError: Expected 'info' to have been called once. Called 3 times.
+E       Calls: [call(event='Request Started(Register Achievements)', EApplicantId='encrypted123', payload=isprofileComplete(IsProfileComplete=True), ip_address=None, os=None, timestamp_utc='2025-06-05 17:11:15', timestamp_ist='2025-06-05 22:41:15'),
+E        call(event='Profile details Found', EApplicantId=12345, timestamp_utc='2025-06-05 17:11:15', timestamp_ist='2025-06-05 22:41:15'),
+E        call(event='Profile details Already Exists', EApplicantId='12345', timestamp_utc='2025-06-05 17:11:15', timestamp_ist='2025-06-05 22:41:15')].
+E       
+E       pytest introspection follows:
+E       
+E       Kwargs:
+E       assert {'EApplicantI...-05 17:11:15'} == {}
+E         
+E         Left contains 4 more items:
+E         {'EApplicantId': '12345',
+E          'event': 'Profile details Already Exists',
+E          'timestamp_ist': '2025-06-05 22:41:15',
+E          'timestamp_utc': '2025-06-05 17:11:15'}
+E         ...
+E         
+E         ...Full output truncated (8 lines hidden), use '-vv' to show
+
+tests/test_router_cafsubmit.py:122: AssertionError
+_____________________________________________________________________________ test_missing_required_fields _____________________________________________________________________________
+
+mock_dependencies = (<AsyncMock name='get_collection' id='137045216555232'>, <MagicMock name='decrypt_eapplicant_id' id='137045217091392'>...d='137045217099120'>, <AsyncMock name='send_sms' id='137045217095136'>, <MagicMock name='logger' id='137045217086784'>)
+
+    @pytest.mark.asyncio
+    async def test_missing_required_fields(mock_dependencies):
+        mock_get_collection, mock_decrypt, _, _, _ = mock_dependencies
+    
+        mock_decrypt.return_value = "12345"
+    
+        test_data = {
+            "IsProfileComplete": True  # profileStatus गायब है
+        }
+>       response = client.post(
+            "/ProfileStatusCheck/encrypted123",
+            json=test_data
+        )
+
+tests/test_router_cafsubmit.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.12/site-packages/starlette/testclient.py:538: in post
+    return super().post(
+venv/lib/python3.12/site-packages/httpx/_client.py:1144: in post
+    return self.request(
+venv/lib/python3.12/site-packages/starlette/testclient.py:437: in request
+    return super().request(
+venv/lib/python3.12/site-packages/httpx/_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/httpx/_client.py:914: in send
+    response = self._send_handling_auth(
+venv/lib/python3.12/site-packages/httpx/_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+venv/lib/python3.12/site-packages/httpx/_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/httpx/_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/starlette/testclient.py:340: in handle_request
+    raise exc
+venv/lib/python3.12/site-packages/starlette/testclient.py:337: in handle_request
+    portal.call(self.app, scope, receive, send)
+venv/lib/python3.12/site-packages/anyio/from_thread.py:290: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/concurrent/futures/_base.py:449: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+venv/lib/python3.12/site-packages/anyio/from_thread.py:221: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/starlette/routing.py:714: in __call__
+    await self.middleware_stack(scope, receive, send)
+venv/lib/python3.12/site-packages/starlette/routing.py:734: in app
+    await route.handle(scope, receive, send)
+venv/lib/python3.12/site-packages/starlette/routing.py:288: in handle
+    await self.app(scope, receive, send)
+venv/lib/python3.12/site-packages/starlette/routing.py:76: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+venv/lib/python3.12/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+venv/lib/python3.12/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+venv/lib/python3.12/site-packages/starlette/routing.py:73: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = <starlette.requests.Request object at 0x7ca4537b1be0>
+
+    async def app(request: Request) -> Response:
+        response: Union[Response, None] = None
+        async with AsyncExitStack() as file_stack:
+            try:
+                body: Any = None
+                if body_field:
+                    if is_body_form:
+                        body = await request.form()
+                        file_stack.push_async_callback(body.close)
+                    else:
+                        body_bytes = await request.body()
+                        if body_bytes:
+                            json_body: Any = Undefined
+                            content_type_value = request.headers.get("content-type")
+                            if not content_type_value:
+                                json_body = await request.json()
+                            else:
+                                message = email.message.Message()
+                                message["content-type"] = content_type_value
+                                if message.get_content_maintype() == "application":
+                                    subtype = message.get_content_subtype()
+                                    if subtype == "json" or subtype.endswith("+json"):
+                                        json_body = await request.json()
+                            if json_body != Undefined:
+                                body = json_body
+                            else:
+                                body = body_bytes
+            except json.JSONDecodeError as e:
+                validation_error = RequestValidationError(
+                    [
+                        {
+                            "type": "json_invalid",
+                            "loc": ("body", e.pos),
+                            "msg": "JSON decode error",
+                            "input": {},
+                            "ctx": {"error": e.msg},
+                        }
+                    ],
+                    body=e.doc,
+                )
+                raise validation_error from e
+            except HTTPException:
+                # If a middleware raises an HTTPException, it should be raised again
+                raise
+            except Exception as e:
+                http_error = HTTPException(
+                    status_code=400, detail="There was an error parsing the body"
+                )
+                raise http_error from e
+            errors: List[Any] = []
+            async with AsyncExitStack() as async_exit_stack:
+                solved_result = await solve_dependencies(
+                    request=request,
+                    dependant=dependant,
+                    body=body,
+                    dependency_overrides_provider=dependency_overrides_provider,
+                    async_exit_stack=async_exit_stack,
+                    embed_body_fields=embed_body_fields,
+                )
+                errors = solved_result.errors
+                if not errors:
+                    raw_response = await run_endpoint_function(
+                        dependant=dependant,
+                        values=solved_result.values,
+                        is_coroutine=is_coroutine,
+                    )
+                    if isinstance(raw_response, Response):
+                        if raw_response.background is None:
+                            raw_response.background = solved_result.background_tasks
+                        response = raw_response
+                    else:
+                        response_args: Dict[str, Any] = {
+                            "background": solved_result.background_tasks
+                        }
+                        # If status_code was set, use it, otherwise use the default from the
+                        # response class, in the case of redirect it's 307
+                        current_status_code = (
+                            status_code
+                            if status_code
+                            else solved_result.response.status_code
+                        )
+                        if current_status_code is not None:
+                            response_args["status_code"] = current_status_code
+                        if solved_result.response.status_code:
+                            response_args["status_code"] = (
+                                solved_result.response.status_code
+                            )
+                        content = await serialize_response(
+                            field=response_field,
+                            response_content=raw_response,
+                            include=response_model_include,
+                            exclude=response_model_exclude,
+                            by_alias=response_model_by_alias,
+                            exclude_unset=response_model_exclude_unset,
+                            exclude_defaults=response_model_exclude_defaults,
+                            exclude_none=response_model_exclude_none,
+                            is_coroutine=is_coroutine,
+                        )
+                        response = actual_response_class(content, **response_args)
+                        if not is_body_allowed_for_status_code(response.status_code):
+                            response.body = b""
+                        response.headers.raw.extend(solved_result.response.headers.raw)
+            if errors:
+                validation_error = RequestValidationError(
+                    _normalize_errors(errors), body=body
+                )
+>               raise validation_error
+E               fastapi.exceptions.RequestValidationError: [{'type': 'missing', 'loc': ('body', 'profileStatus'), 'msg': 'Field required', 'input': {'IsProfileComplete': True}}]
+
+venv/lib/python3.12/site-packages/fastapi/routing.py:346: RequestValidationError
+________________________________________________________________________________ test_model_validation _________________________________________________________________________________
+
+    def test_model_validation():
+        from profile_services.model.model_profileCheck import isprofileComplete
+        from pydantic import ValidationError
+    
+        valid_data = {
+            "profileStatus": True,
+            "IsProfileComplete": True
+        }
+        model = isprofileComplete(**valid_data)
+>       assert model.profileStatus is True
+               ^^^^^^^^^^^^^^^^^^^
+
+tests/test_router_cafsubmit.py:175: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = isprofileComplete(IsProfileComplete=True), item = 'profileStatus'
+
+    def __getattr__(self, item: str) -> Any:
+        private_attributes = object.__getattribute__(self, '__private_attributes__')
+        if item in private_attributes:
+            attribute = private_attributes[item]
+            if hasattr(attribute, '__get__'):
+                return attribute.__get__(self, type(self))  # type: ignore
+    
+            try:
+                # Note: self.__pydantic_private__ cannot be None if self.__private_attributes__ has items
+                return self.__pydantic_private__[item]  # type: ignore
+            except KeyError as exc:
+                raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}') from exc
+        else:
+            # `__pydantic_extra__` can fail to be set if the model is not yet fully initialized.
+            # See `BaseModel.__repr_args__` for more details
+            try:
+                pydantic_extra = object.__getattribute__(self, '__pydantic_extra__')
+            except AttributeError:
+                pydantic_extra = None
+    
+            if pydantic_extra:
+                try:
+                    return pydantic_extra[item]
+                except KeyError as exc:
+                    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}') from exc
+            else:
+                if hasattr(self.__class__, item):
+                    return super().__getattribute__(item)  # Raises AttributeError if appropriate
+                else:
+                    # this is the current error
+>                   raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+E                   AttributeError: 'isprofileComplete' object has no attribute 'profileStatus'
+
+venv/lib/python3.12/site-packages/pydantic/main.py:994: AttributeError
+=================================================================================== warnings summary ===================================================================================
+venv/lib/python3.12/site-packages/pydantic/fields.py:1076: 328 warnings
+  /home/adarsh/profileService/venv/lib/python3.12/site-packages/pydantic/fields.py:1076: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'example'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.11/migration/
+    warn(
+
+common/common_header.py:17
+  /home/adarsh/profileService/common/common_header.py:17: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    c: str = Header("India", example="India"),
+
+venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:323: 47 warnings
+  /home/adarsh/profileService/venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:323: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.11/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+profile_services/router_TenthBoard.py:24
+  /home/adarsh/profileService/profile_services/router_TenthBoard.py:24: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_TenthBoard.py:137
+  /home/adarsh/profileService/profile_services/router_TenthBoard.py:137: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_TenthBoard.py:247
+  /home/adarsh/profileService/profile_services/router_TenthBoard.py:247: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_TenthBoard.py:341
+  /home/adarsh/profileService/profile_services/router_TenthBoard.py:341: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ==",)
+
+profile_services/router_achievement.py:32
+  /home/adarsh/profileService/profile_services/router_achievement.py:32: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(
+
+profile_services/router_achievement.py:142
+  /home/adarsh/profileService/profile_services/router_achievement.py:142: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(
+
+profile_services/router_achievement.py:233
+  /home/adarsh/profileService/profile_services/router_achievement.py:233: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(
+
+profile_services/router_address.py:21
+  /home/adarsh/profileService/profile_services/router_address.py:21: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ==")):
+
+profile_services/router_address.py:102
+  /home/adarsh/profileService/profile_services/router_address.py:102: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ==")):
+
+profile_services/router_address.py:217
+  /home/adarsh/profileService/profile_services/router_address.py:217: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ==")):
+
+profile_services/router_adhaarPhotoid_UID.py:29
+  /home/adarsh/profileService/profile_services/router_adhaarPhotoid_UID.py:29: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_adhaarPhotoid_UID.py:219
+  /home/adarsh/profileService/profile_services/router_adhaarPhotoid_UID.py:219: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_adhaarPhotoid_UID.py:348
+  /home/adarsh/profileService/profile_services/router_adhaarPhotoid_UID.py:348: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(
+
+profile_services/router_disability.py:23
+  /home/adarsh/profileService/profile_services/router_disability.py:23: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ==")):
+
+profile_services/router_disability.py:105
+  /home/adarsh/profileService/profile_services/router_disability.py:105: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ==")):
+
+profile_services/router_disability.py:188
+  /home/adarsh/profileService/profile_services/router_disability.py:188: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ==")):
+
+profile_services/router_disability.py:295
+  /home/adarsh/profileService/profile_services/router_disability.py:295: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ==")
+
+profile_services/router_employmentprofile.py:23
+  /home/adarsh/profileService/profile_services/router_employmentprofile.py:23: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_employmentprofile.py:111
+  /home/adarsh/profileService/profile_services/router_employmentprofile.py:111: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_employmentprofile.py:221
+  /home/adarsh/profileService/profile_services/router_employmentprofile.py:221: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_exam_profile.py:15
+  /home/adarsh/profileService/profile_services/router_exam_profile.py:15: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(
+
+profile_services/router_exam_profile.py:74
+  /home/adarsh/profileService/profile_services/router_exam_profile.py:74: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(
+
+profile_services/router_fullprofile.py:31
+  /home/adarsh/profileService/profile_services/router_fullprofile.py:31: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_parentprofile.py:21
+  /home/adarsh/profileService/profile_services/router_parentprofile.py:21: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_parentprofile.py:104
+  /home/adarsh/profileService/profile_services/router_parentprofile.py:104: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_parentprofile.py:232
+  /home/adarsh/profileService/profile_services/router_parentprofile.py:232: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_personal_profile.py:28
+  /home/adarsh/profileService/profile_services/router_personal_profile.py:28: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABn9QMcTNYJLRle00EqodMOb0pzp2z_aLzilMpmdQrJ-FaclAvPaUmRx90d0lOatT5O0kFffa_Qi_URV9y5Dl9RGkpVog=="),
+
+profile_services/router_personal_profile.py:117
+  /home/adarsh/profileService/profile_services/router_personal_profile.py:117: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_personal_profile.py:244
+  /home/adarsh/profileService/profile_services/router_personal_profile.py:244: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path( ..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="
+
+profile_services/router_personal_profile.py:346
+  /home/adarsh/profileService/profile_services/router_personal_profile.py:346: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_preidentity.py:20
+  /home/adarsh/profileService/profile_services/router_preidentity.py:20: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_preidentity.py:137
+  /home/adarsh/profileService/profile_services/router_preidentity.py:137: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_preidentity.py:248
+  /home/adarsh/profileService/profile_services/router_preidentity.py:248: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(
+
+profile_services/router_previous_upsc_exam.py:24
+  /home/adarsh/profileService/profile_services/router_previous_upsc_exam.py:24: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ==")
+
+profile_services/router_previous_upsc_exam.py:141
+  /home/adarsh/profileService/profile_services/router_previous_upsc_exam.py:141: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ==")
+
+profile_services/router_previous_upsc_exam.py:268
+  /home/adarsh/profileService/profile_services/router_previous_upsc_exam.py:268: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ==")
+
+profile_services/router_qualification.py:23
+  /home/adarsh/profileService/profile_services/router_qualification.py:23: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_qualification.py:138
+  /home/adarsh/profileService/profile_services/router_qualification.py:138: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_qualification.py:311
+  /home/adarsh/profileService/profile_services/router_qualification.py:311: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_socalCatProfile.py:23
+  /home/adarsh/profileService/profile_services/router_socalCatProfile.py:23: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ=="),
+
+profile_services/router_socalCatProfile.py:104
+  /home/adarsh/profileService/profile_services/router_socalCatProfile.py:104: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ==")
+
+profile_services/router_socalCatProfile.py:214
+  /home/adarsh/profileService/profile_services/router_socalCatProfile.py:214: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(..., example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ==")
+
+profile_services/router_cafsubmit.py:28
+  /home/adarsh/profileService/profile_services/router_cafsubmit.py:28: DeprecationWarning: `example` has been deprecated, please use `examples` instead
+    EApplicantId: str = Path(...,example="gAAAAABnOwskIyAzoaTonU5z1B3dxThtgooiCiFFcKYMZICVfpSuGK90mXxcODw2i6qJHpSiyBPhIj40ZYfCe20PitVo56R2QQ==")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=============================================================================== short test summary info ================================================================================
+FAILED tests/test_router_cafsubmit.py::test_duplicate_key_error - AssertionError: Expected 'info' to have been called once. Called 3 times.
+FAILED tests/test_router_cafsubmit.py::test_missing_required_fields - fastapi.exceptions.RequestValidationError: [{'type': 'missing', 'loc': ('body', 'profileStatus'), 'msg': 'Field required', 'input': {'IsProfileComplete': True}}]
+FAILED tests/test_router_cafsubmit.py::test_model_validation - AttributeError: 'isprofileComplete' object has no attribute 'profileStatus'
+====================================================================== 3 failed, 4 passed, 419 warnings in 1.07s =======================================================================
