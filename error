@@ -5,6 +5,336 @@ rootdir: /home/adarsh/profileService/tests
 configfile: pytest.ini
 plugins: asyncio-1.0.0, anyio-4.9.0, mock-3.14.1
 asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 5 items                                                                                                                                                                      
+
+tests/test_router_cafsubmit.py::test_success_case FAILED                                                                                                                         [ 20%]
+tests/test_router_cafsubmit.py::test_invalid_decryption FAILED                                                                                                                   [ 40%]
+tests/test_router_cafsubmit.py::test_user_not_found FAILED                                                                                                                       [ 60%]
+tests/test_router_cafsubmit.py::test_duplicate_key_error FAILED                                                                                                                  [ 80%]
+tests/test_router_cafsubmit.py::test_internal_server_error FAILED                                                                                                                [100%]
+
+======================================================================================= FAILURES =======================================================================================
+__________________________________________________________________________________ test_success_case ___________________________________________________________________________________
+
+self = <Coroutine test_success_case>
+
+    def runtest(self) -> None:
+        self.obj = wrap_in_sync(
+            # https://github.com/pytest-dev/pytest-asyncio/issues/596
+            self.obj,  # type: ignore[has-type]
+        )
+>       super().runtest()
+
+venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:508: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:773: in inner
+    _loop.run_until_complete(task)
+/usr/lib/python3.12/asyncio/base_events.py:687: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1404: in patched
+    with self.decoration_helper(patched,
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1369: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1442: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+/usr/lib/python3.12/pkgutil.py:513: in resolve_name
+    mod = importlib.import_module(modname)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'router_cafsubmit', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'router_cafsubmit'
+
+/usr/lib/python3.12/importlib/__init__.py:90: ModuleNotFoundError
+_______________________________________________________________________________ test_invalid_decryption ________________________________________________________________________________
+
+self = <Coroutine test_invalid_decryption>
+
+    def runtest(self) -> None:
+        self.obj = wrap_in_sync(
+            # https://github.com/pytest-dev/pytest-asyncio/issues/596
+            self.obj,  # type: ignore[has-type]
+        )
+>       super().runtest()
+
+venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:508: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:773: in inner
+    _loop.run_until_complete(task)
+/usr/lib/python3.12/asyncio/base_events.py:687: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1404: in patched
+    with self.decoration_helper(patched,
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1369: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1442: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+/usr/lib/python3.12/pkgutil.py:513: in resolve_name
+    mod = importlib.import_module(modname)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'router_cafsubmit', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'router_cafsubmit'
+
+/usr/lib/python3.12/importlib/__init__.py:90: ModuleNotFoundError
+_________________________________________________________________________________ test_user_not_found __________________________________________________________________________________
+
+self = <Coroutine test_user_not_found>
+
+    def runtest(self) -> None:
+        self.obj = wrap_in_sync(
+            # https://github.com/pytest-dev/pytest-asyncio/issues/596
+            self.obj,  # type: ignore[has-type]
+        )
+>       super().runtest()
+
+venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:508: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:773: in inner
+    _loop.run_until_complete(task)
+/usr/lib/python3.12/asyncio/base_events.py:687: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1404: in patched
+    with self.decoration_helper(patched,
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1369: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1442: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+/usr/lib/python3.12/pkgutil.py:513: in resolve_name
+    mod = importlib.import_module(modname)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'router_cafsubmit', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'router_cafsubmit'
+
+/usr/lib/python3.12/importlib/__init__.py:90: ModuleNotFoundError
+_______________________________________________________________________________ test_duplicate_key_error _______________________________________________________________________________
+
+self = <Coroutine test_duplicate_key_error>
+
+    def runtest(self) -> None:
+        self.obj = wrap_in_sync(
+            # https://github.com/pytest-dev/pytest-asyncio/issues/596
+            self.obj,  # type: ignore[has-type]
+        )
+>       super().runtest()
+
+venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:508: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:773: in inner
+    _loop.run_until_complete(task)
+/usr/lib/python3.12/asyncio/base_events.py:687: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1404: in patched
+    with self.decoration_helper(patched,
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1369: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1442: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+/usr/lib/python3.12/pkgutil.py:513: in resolve_name
+    mod = importlib.import_module(modname)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'router_cafsubmit', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'router_cafsubmit'
+
+/usr/lib/python3.12/importlib/__init__.py:90: ModuleNotFoundError
+______________________________________________________________________________ test_internal_server_error ______________________________________________________________________________
+
+self = <Coroutine test_internal_server_error>
+
+    def runtest(self) -> None:
+        self.obj = wrap_in_sync(
+            # https://github.com/pytest-dev/pytest-asyncio/issues/596
+            self.obj,  # type: ignore[has-type]
+        )
+>       super().runtest()
+
+venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:508: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:773: in inner
+    _loop.run_until_complete(task)
+/usr/lib/python3.12/asyncio/base_events.py:687: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1404: in patched
+    with self.decoration_helper(patched,
+/usr/lib/python3.12/contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1369: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+/usr/lib/python3.12/unittest/mock.py:1442: in __enter__
+    self.target = self.getter()
+                  ^^^^^^^^^^^^^
+/usr/lib/python3.12/pkgutil.py:513: in resolve_name
+    mod = importlib.import_module(modname)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'router_cafsubmit', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'router_cafsubmit'
+
+/usr/lib/python3.12/importlib/__init__.py:90: ModuleNotFoundError
+=============================================================================== short test summary info ================================================================================
+FAILED tests/test_router_cafsubmit.py::test_success_case - ModuleNotFoundError: No module named 'router_cafsubmit'
+FAILED tests/test_router_cafsubmit.py::test_invalid_decryption - ModuleNotFoundError: No module named 'router_cafsubmit'
+FAILED tests/test_router_cafsubmit.py::test_user_not_found - ModuleNotFoundError: No module named 'router_cafsubmit'
+FAILED tests/test_router_cafsubmit.py::test_duplicate_key_error - ModuleNotFoundError: No module named 'router_cafsubmit'
+FAILED tests/test_router_cafsubmit.py::test_internal_server_error - ModuleNotFoundError: No module named 'router_cafsubmit'
+================================================================================== 5 failed in 1.53s ===================================================================================
+(venv) adarsh@adarsh:~/profileService$ nano tests/test_router_cafsubmit.py 
+(venv) adarsh@adarsh:~/profileService$ pytest tests/test_router_cafsubmit.py -v
+================================================================================= test session starts ==================================================================================
+platform linux -- Python 3.12.3, pytest-8.4.0, pluggy-1.6.0 -- /home/adarsh/profileService/venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/adarsh/profileService/tests
+configfile: pytest.ini
+plugins: asyncio-1.0.0, anyio-4.9.0, mock-3.14.1
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
 collected 7 items                                                                                                                                                                      
 
 tests/test_router_cafsubmit.py::test_profile_status_check_success PASSED                                                                                                         [ 14%]
@@ -18,7 +348,7 @@ tests/test_router_cafsubmit.py::test_model_validation FAILED                    
 ======================================================================================= FAILURES =======================================================================================
 _______________________________________________________________________________ test_duplicate_key_error _______________________________________________________________________________
 
-self = <MagicMock name='logger.__getitem__().info' id='128681040642272'>
+self = <MagicMock name='logger.__getitem__().info' id='123409777056784'>
 
     def assert_called_once(self):
         """assert that the mock was called only once.
@@ -30,15 +360,15 @@ self = <MagicMock name='logger.__getitem__().info' id='128681040642272'>
                       self._calls_repr()))
 >           raise AssertionError(msg)
 E           AssertionError: Expected 'info' to have been called once. Called 3 times.
-E           Calls: [call(event='Request Started(Register Achievements)', EApplicantId='encrypted123', payload=isprofileComplete(IsProfileComplete=True), ip_address=None, os=None, timestamp_utc='2025-06-05 17:25:00', timestamp_ist='2025-06-05 22:55:00'),
-E            call(event='Profile details Found', EApplicantId=12345, timestamp_utc='2025-06-05 17:25:00', timestamp_ist='2025-06-05 22:55:00'),
-E            call(event='Profile details Already Exists', EApplicantId='12345', timestamp_utc='2025-06-05 17:25:00', timestamp_ist='2025-06-05 22:55:00')].
+E           Calls: [call(event='Request Started(Register Achievements)', EApplicantId='encrypted123', payload=isprofileComplete(IsProfileComplete=True), ip_address=None, os=None, timestamp_utc='2025-06-05 19:19:55', timestamp_ist='2025-06-06 00:49:55'),
+E            call(event='Profile details Found', EApplicantId=12345, timestamp_utc='2025-06-05 19:19:55', timestamp_ist='2025-06-06 00:49:55'),
+E            call(event='Profile details Already Exists', EApplicantId='12345', timestamp_utc='2025-06-05 19:19:55', timestamp_ist='2025-06-06 00:49:55')].
 
 /usr/lib/python3.12/unittest/mock.py:923: AssertionError
 
 During handling of the above exception, another exception occurred:
 
-mock_dependencies = (<AsyncMock name='get_collection' id='128681040496592'>, <MagicMock name='decrypt_eapplicant_id' id='128681040656480'>...d='128681040741248'>, <AsyncMock name='send_sms' id='128681040745136'>, <MagicMock name='logger' id='128681040749072'>)
+mock_dependencies = (<AsyncMock name='get_collection' id='123409776900240'>, <MagicMock name='decrypt_eapplicant_id' id='123409776932240'>...d='123409777000912'>, <AsyncMock name='send_sms' id='123409777004800'>, <MagicMock name='logger' id='123409777008784'>)
 
     @pytest.mark.asyncio
     async def test_duplicate_key_error(mock_dependencies):
@@ -63,20 +393,20 @@ mock_dependencies = (<AsyncMock name='get_collection' id='128681040496592'>, <Ma
         assert response.json()["status"] is True
 >       mock_logger["audit"].info.assert_called_once()
 E       AssertionError: Expected 'info' to have been called once. Called 3 times.
-E       Calls: [call(event='Request Started(Register Achievements)', EApplicantId='encrypted123', payload=isprofileComplete(IsProfileComplete=True), ip_address=None, os=None, timestamp_utc='2025-06-05 17:25:00', timestamp_ist='2025-06-05 22:55:00'),
-E        call(event='Profile details Found', EApplicantId=12345, timestamp_utc='2025-06-05 17:25:00', timestamp_ist='2025-06-05 22:55:00'),
-E        call(event='Profile details Already Exists', EApplicantId='12345', timestamp_utc='2025-06-05 17:25:00', timestamp_ist='2025-06-05 22:55:00')].
+E       Calls: [call(event='Request Started(Register Achievements)', EApplicantId='encrypted123', payload=isprofileComplete(IsProfileComplete=True), ip_address=None, os=None, timestamp_utc='2025-06-05 19:19:55', timestamp_ist='2025-06-06 00:49:55'),
+E        call(event='Profile details Found', EApplicantId=12345, timestamp_utc='2025-06-05 19:19:55', timestamp_ist='2025-06-06 00:49:55'),
+E        call(event='Profile details Already Exists', EApplicantId='12345', timestamp_utc='2025-06-05 19:19:55', timestamp_ist='2025-06-06 00:49:55')].
 E       
 E       pytest introspection follows:
 E       
 E       Kwargs:
-E       assert {'EApplicantI...-05 17:25:00'} == {}
+E       assert {'EApplicantI...-05 19:19:55'} == {}
 E         
 E         Left contains 4 more items:
 E         {'EApplicantId': '12345',
 E          'event': 'Profile details Already Exists',
-E          'timestamp_ist': '2025-06-05 22:55:00',
-E          'timestamp_utc': '2025-06-05 17:25:00'}
+E          'timestamp_ist': '2025-06-06 00:49:55',
+E          'timestamp_utc': '2025-06-05 19:19:55'}
 E         ...
 E         
 E         ...Full output truncated (8 lines hidden), use '-vv' to show
@@ -84,7 +414,7 @@ E         ...Full output truncated (8 lines hidden), use '-vv' to show
 tests/test_router_cafsubmit.py:120: AssertionError
 _____________________________________________________________________________ test_missing_required_fields _____________________________________________________________________________
 
-mock_dependencies = (<AsyncMock name='get_collection' id='128681040609840'>, <MagicMock name='decrypt_eapplicant_id' id='128681040444640'>...d='128681040432976'>, <AsyncMock name='send_sms' id='128681040432688'>, <MagicMock name='logger' id='128681040440128'>)
+mock_dependencies = (<AsyncMock name='get_collection' id='123409776901536'>, <MagicMock name='decrypt_eapplicant_id' id='123409776819712'>...d='123409776815728'>, <AsyncMock name='send_sms' id='123409776811840'>, <MagicMock name='logger' id='123409776287888'>)
 
     @pytest.mark.asyncio
     async def test_missing_required_fields(mock_dependencies):
@@ -128,7 +458,7 @@ venv/lib/python3.12/site-packages/starlette/testclient.py:337: in handle_request
 venv/lib/python3.12/site-packages/anyio/from_thread.py:290: in call
     return cast(T_Retval, self.start_task_soon(func, *args).result())
                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/usr/lib/python3.12/concurrent/futures/_base.py:449: in result
+/usr/lib/python3.12/concurrent/futures/_base.py:456: in result
     return self.__get_result()
            ^^^^^^^^^^^^^^^^^^^
 /usr/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
@@ -153,7 +483,7 @@ venv/lib/python3.12/site-packages/starlette/routing.py:73: in app
                ^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
-request = <starlette.requests.Request object at 0x7508e3b56300>
+request = <starlette.requests.Request object at 0x703d93e08f80>
 
     async def app(request: Request) -> Response:
         response: Union[Response, None] = None
@@ -321,4 +651,5 @@ venv/lib/python3.12/site-packages/pydantic/main.py:994: AttributeError
 FAILED tests/test_router_cafsubmit.py::test_duplicate_key_error - AssertionError: Expected 'info' to have been called once. Called 3 times.
 FAILED tests/test_router_cafsubmit.py::test_missing_required_fields - fastapi.exceptions.RequestValidationError: [{'type': 'missing', 'loc': ('body', 'profileStatus'), 'msg': 'Field required', 'input': {'IsProfileComplete': True}}]
 FAILED tests/test_router_cafsubmit.py::test_model_validation - AttributeError: 'isprofileComplete' object has no attribute 'profileStatus'
-============================================================================= 3 failed, 4 passed in 0.91s ==============================================================================
+============================================================================= 3 failed, 4 passed in 0.93s ==============================================================================
+par isme ye dikaat hai isse sahi kar do please 
